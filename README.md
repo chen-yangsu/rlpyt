@@ -77,7 +77,7 @@ This package does not include its own visualization, as the logged data is compa
 2. Install the anaconda environment appropriate for the machine.
 ```
 conda env create -f linux_[cpu|cuda9|cuda10].yml
-source activate rlpyt
+conda activate rlpyt
 ```
 
 3. Either A) Edit the PYTHONPATH to include the rlpyt directory, or
