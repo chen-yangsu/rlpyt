@@ -1,6 +1,6 @@
 
 """
-Runs multiple instances of the Atari environment and optimizes using A2C
+Runs multiple instances of the Atari environment and optimizes using PPO
 algorithm. Can choose between configurations for use of CPU/GPU for sampling
 (serial or parallel) and optimization (serial).
 
@@ -14,7 +14,7 @@ from rlpyt.samplers.parallel.cpu.sampler import CpuSampler
 from rlpyt.samplers.parallel.gpu.sampler import GpuSampler
 from rlpyt.samplers.parallel.gpu.alternating_sampler import AlternatingSampler
 from rlpyt.envs.atari.atari_env import AtariEnv, AtariTrajInfo
-from rlpyt.algos.pg.a2c import A2C
+from rlpyt.algos.pg.ppo import PPO
 from rlpyt.agents.pg.atari import AtariFfAgent
 from rlpyt.runners.minibatch_rl import MinibatchRl
 from rlpyt.utils.logging.context import logger_context
@@ -42,23 +42,23 @@ def build_and_train(game="pong", run_ID=0, cuda_idx=None, sample_mode="serial", 
         EnvCls=AtariEnv,
         TrajInfoCls=AtariTrajInfo,
         env_kwargs=dict(game=game),
-        batch_T=5,  # time-steps per sampler iteration.
-        batch_B=16,  # parallel environments.
+        batch_T= 5,  # 5 time-steps per sampler iteration.
+        batch_B=16,  # 16 parallel environments.
         max_decorrelation_steps=400,
     )
-    algo = A2C()  # Run with defaults.
+    algo = PPO()  # Run with defaults.
     agent = AtariFfAgent()
     runner = MinibatchRl(
         algo=algo,
         agent=agent,
         sampler=sampler,
-        n_steps=50e6,
+        n_steps= 1e3,#50e6,
         log_interval_steps=1e5,
         affinity=affinity,
     )
     config = dict(game=game)
-    name = "a2c_" + game
-    log_dir = "example_3"
+    name = "ppo" + game
+    log_dir = "example_3_test"
     with logger_context(log_dir, run_ID, name, config):
         runner.train()
 
